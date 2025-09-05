@@ -76,6 +76,11 @@ body.dark-theme {
    2. Base Styles
    ============================================ */
 
+/* Utility class */
+.hidden {
+    display: none !important;
+}
+
 *,
 *::before,
 *::after {

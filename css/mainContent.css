@@ -2,11 +2,6 @@
 =            Main Content & Chat            =
 =============================================*/
 
-/* Utility class */
-.hidden {
-    display: none !important;
-}
-
 main {
     flex: 1; /* Takes up remaining vertical space */
     display: flex;
@@ -22,6 +17,7 @@ main {
     max-width: 768px; /* A common max-width for content */
     display: flex;
     flex-direction: column;
+    padding-top: var(--spacing-lg); /* Add space so first message isn't hidden by header */
     align-items: center;
     gap: var(--spacing-xl);
     text-align: center;
@@ -156,7 +152,6 @@ main {
     flex-direction: column;
     gap: var(--spacing-md);
     width: 100%;
-    padding-top: calc(var(--header-height) + var(--spacing-lg)); /* Add space for navbar plus extra padding */
     margin-bottom: var(--spacing-md); /* Add some space above suggested prompts */
 }
 
