@@ -15,7 +15,10 @@
     <canvas id="stars-canvas"></canvas>
     <header>
         <div class="left-header-div">
-            <h2><span>Chill</span>Bot</h2>
+            <h2 class="header-title"><span>Chill</span>Bot</h2>
+            <button class="new-chat-btn hidden">
+                <span>New Chat</span>
+            </button>
         </div>
         <div class="right-header-div">
             <button class="settings-btn" data-tooltip="Settings">
@@ -83,6 +86,8 @@
 
     <emoji-picker class="hidden"></emoji-picker>
 
+    <script src="js/config.js" defer></script>
+    <script src="js/chat.js" defer></script>
     <script src="js/main.js" defer></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
 </body>

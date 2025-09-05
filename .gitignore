@@ -1,0 +1,6 @@
+# Secret configuration file
+js/config.js
+
+# IDE and system files
+.vscode/
+*.DS_Store

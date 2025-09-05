@@ -6,10 +6,14 @@ main {
     flex: 1; /* Takes up remaining vertical space */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* Vertically center content when it's short */
     padding: var(--spacing-lg);
     overflow-y: auto; /* Allow scrolling if content overflows */
     margin-top: var(--header-height); /* Offset for the fixed header */
+}
+
+main.is-chatting {
+    align-items: flex-start; /* Align to top when chat starts */
 }
 
 .chat-div {
@@ -19,6 +23,7 @@ main {
     flex-direction: column;
     padding-top: var(--spacing-lg); /* Add space so first message isn't hidden by header */
     align-items: center;
+    padding-bottom: 180px; /* Add space at the bottom for the fixed input area */
     gap: var(--spacing-xl);
     text-align: center;
 }
@@ -162,6 +167,7 @@ main {
     line-height: 1.4;
     word-wrap: break-word;
     text-align: left;
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
 .user-message {
@@ -185,6 +191,24 @@ main {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
+}
+
+.bot-message p,
+.bot-message ol {
+    margin: 0;
+}
+
+.bot-message p:not(:last-child),
+.bot-message ol:not(:last-child) {
+    margin-bottom: var(--spacing-sm);
+}
+
+.bot-message ol {
+    padding-left: 20px; /* Indent the list */
+}
+
+.bot-message li:not(:last-child) {
+    margin-bottom: var(--spacing-xs);
 }
 
 .message-actions {
