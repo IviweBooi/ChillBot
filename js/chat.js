@@ -6,13 +6,15 @@
  * @returns {Promise<string>} The text response from the AI.
  */
 async function getGeminiResponse(userMessage) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+  // The front-end now calls our own serverless function
+  const url = `/.netlify/functions/get-gemini-response`;
 
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: userMessage }] }] }),
+      // We send the user's message in the body
+      body: JSON.stringify({ userMessage: userMessage }),
     });
     const data = await response.json();
 
