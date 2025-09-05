@@ -1,0 +1,68 @@
+/*=============================================
+=       Responsive Layout (Media Queries)     =
+=============================================*/
+
+@media (max-width: 768px) {
+    /* --- Global Adjustments for Tablets & Smaller --- */
+    :root {
+        --spacing-lg: 1.25rem; /* Reduce large spacing */
+        --header-height: 56px;
+    }
+
+    /* --- Header --- */
+    header {
+        padding: 0 var(--spacing-md);
+    }
+
+    .right-header-div .sign-in-btn span {
+        display: none;
+    }
+
+    .right-header-div .sign-up-btn {
+        display: none;
+    }
+
+    .right-header-div .sign-in-btn {
+        padding: var(--spacing-sm); /* Make it square for icon-only */
+    }
+
+    /* --- Main Content --- */
+    .chat-header h1 {
+        font-size: 38px;
+    }
+
+    .chat-header p {
+        font-size: 15px;
+    }
+
+    .suggested-prompts button {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* --- Global Adjustments for Mobile --- */
+    :root {
+        --spacing-md: 0.75rem;
+        --spacing-lg: 1rem;
+    }
+
+    /* --- Header --- */
+    .left-header-div h2 {
+        font-size: 20px;
+    }
+
+    .right-header-div {
+        gap: var(--spacing-xs);
+    }
+
+    /* --- Main Content --- */
+    .chat-header h1 {
+        font-size: 32px;
+    }
+
+    .message {
+        max-width: 90%; /* Allow messages to be a bit wider on small screens */
+    }
+}
