@@ -157,7 +157,7 @@ header{
 [data-tooltip]::after {
     content: attr(data-tooltip); /* Use data-tooltip for the text */
     position: absolute;
-    bottom: calc(100% + 5px); /* Position above the button */
+    top: calc(100% + 5px); /* Position above the button */
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
