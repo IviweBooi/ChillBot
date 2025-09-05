@@ -16,6 +16,13 @@ async function getGeminiResponse(userMessage) {
       // We send the user's message in the body
       body: JSON.stringify({ userMessage: userMessage }),
     });
+
+    // Check if the response from the Netlify function was successful
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Netlify function error: ${response.status} ${response.statusText}`, errorText);
+      return "I'm sorry, but I couldn't get a response from the server. This can happen if the request times out. Please try again.";
+    }
     const data = await response.json();
 
     // Add a robust check to ensure the response has the expected structure.
