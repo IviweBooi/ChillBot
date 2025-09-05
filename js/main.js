@@ -341,6 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        /* Shooting Star Class */
         class ShootingStar {
             constructor() {
                 this.reset();
@@ -369,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-
+            /* drawing shooting stars */
             draw() {
                 if (this.active) {
                     const gradient = ctx.createLinearGradient(this.x, this.y, this.x + this.len, this.y - this.len);
