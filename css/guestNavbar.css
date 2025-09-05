@@ -26,6 +26,21 @@ header{
     justify-content: start;
 }
 
+.new-chat-btn {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 20px;
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+}
+
 .left-header-div h2{
     font-family: 'Asimovian', sans-serif;
     font-size: 24px;

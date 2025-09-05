@@ -2,6 +2,44 @@
  * Main JavaScript file for ChillBot UI interactions.
  */
 
+/**
+ * A simple markdown-to-HTML parser.
+ * Handles paragraphs, bold text, and numbered lists.
+ * @param {string} text The raw text from the bot.
+ * @returns {string} The formatted HTML string.
+ */
+function parseMarkdown(text) {
+    // Process block-level elements first (lists), then inline elements.
+    const lines = text.split('\n');
+    let html = '';
+    let inList = false;
+
+    for (const line of lines) {
+        if (/^\d+\.\s/.test(line)) { // Handle numbered lists
+            if (!inList) {
+                html += '<ol>';
+                inList = true;
+            }
+            html += `<li>${line.replace(/^\d+\.\s/, '')}</li>`;
+        } else { // Handle paragraphs
+            if (inList) {
+                html += '</ol>';
+                inList = false;
+            }
+            if (line.trim()) {
+                html += `<p>${line}</p>`;
+            }
+        }
+    }
+
+    if (inList) { // Close any open list at the end
+        html += '</ol>';
+    }
+
+    // Process inline elements like bold
+    return html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     let startAnimation = () => {};
@@ -209,11 +247,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Send Message Functionality ---
     const chatMessagesContainer = document.querySelector('.chat-messages');
 
+    const mainElement = document.querySelector('main');
+    const chatHeader = document.querySelector('.chat-header');
+    const headerTitle = document.querySelector('.header-title');
+    const newChatBtn = document.querySelector('.new-chat-btn');
+
     const handleSendMessage = () => {
         const messageText = chatInput.value.trim();
 
         if (messageText === '') {
             return; // Don't send empty messages
+        }
+
+        // On first message, hide header and show "New Chat" button
+        if (chatHeader && !chatHeader.classList.contains('hidden')) {
+            chatHeader.classList.add('hidden');
+            if (headerTitle) headerTitle.classList.add('hidden');
+            if (newChatBtn) newChatBtn.classList.remove('hidden');
+            if (mainElement) mainElement.classList.add('is-chatting');
         }
 
         // 1. Create and display the user's message bubble
@@ -232,32 +283,34 @@ document.addEventListener('DOMContentLoaded', () => {
         userMessageElement.scrollIntoView({ behavior: 'smooth' });
 
         // 5. Show typing indicator and get bot response
-        showBotResponse();
+        showBotResponse(messageText);
 
         // 6. Update suggested prompts for the next interaction
         updateSuggestedPrompts();
     };
 
-    const showBotResponse = () => {
+    const showBotResponse = async (userMessage) => {
         // 1. Show typing indicator
         const typingIndicator = document.createElement('div');
         typingIndicator.classList.add('typing-indicator');
         typingIndicator.innerHTML = '<span></span><span></span><span></span>';
         chatMessagesContainer.appendChild(typingIndicator);
         typingIndicator.scrollIntoView({ behavior: 'smooth' });
+        
+        try {
+            // 2. Get the actual response from the Gemini API
+            const botResponseText = await getGeminiResponse(userMessage);
 
-        // 2. Simulate API call delay
-        setTimeout(() => {
-            // 3. Remove typing indicator
+            // 3. Remove the typing indicator once the response is received
             typingIndicator.remove();
 
-            // 4. Create and display the bot's message
+            // 4. Create and display the bot's message bubble
             const botMessageElement = document.createElement('div');
             botMessageElement.classList.add('message', 'bot-message');
 
             // Message text
-            const textElement = document.createElement('p');
-            textElement.textContent = "Of course! Here is a simple 5-minute meditation script: Find a comfortable position, close your eyes, and focus on your breath. Inhale for four counts, hold for four, and exhale for six. Repeat this, allowing thoughts to come and go without judgment.";
+            const contentElement = document.createElement('div');
+            contentElement.innerHTML = parseMarkdown(botResponseText);
 
             // Action buttons
             const actionsContainer = document.createElement('div');
@@ -281,16 +334,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 actionsContainer.appendChild(button);
             });
 
-            botMessageElement.appendChild(textElement);
+            botMessageElement.appendChild(contentElement);
             botMessageElement.appendChild(actionsContainer);
             chatMessagesContainer.appendChild(botMessageElement);
 
             // 5. Scroll to the new message
             botMessageElement.scrollIntoView({ behavior: 'smooth' });
 
-        }, 2000); // 2-second delay
+        } catch (error) {
+            // If there's an error, remove the indicator and show an error message
+            typingIndicator.remove();
+            console.error("Failed to show bot response:", error);
+        }
     };
 
+    // --- New Chat Functionality ---
+    if (newChatBtn) {
+        newChatBtn.addEventListener('click', () => {
+            chatMessagesContainer.innerHTML = ''; // Clear messages
+            if (chatHeader) chatHeader.classList.remove('hidden');
+            if (headerTitle) headerTitle.classList.remove('hidden');
+            newChatBtn.classList.add('hidden');
+            if (mainElement) mainElement.classList.remove('is-chatting');
+            updateSuggestedPrompts();
+        });
+    }
+    
     // --- Starry Night Effect ---
     const canvas = document.getElementById('stars-canvas');
     if (canvas) {
