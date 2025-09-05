@@ -20,8 +20,8 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Get the generative model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+    // Get the generative model - using v1beta model name
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     // Generate content
     const result = await model.generateContent(userMessage);
