@@ -1,0 +1,191 @@
+
+header{
+    background-color: var(--bg-primary);
+    height: var(--header-height);
+    width: 100%;
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0 var(--spacing-lg);
+}
+
+
+/*=============================================
+=            left-header-div            =
+=============================================*/
+
+.left-header-div{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.left-header-div h2{
+    font-family: 'Asimovian', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.left-header-div h2 span{
+    color: var(--brand-primary);
+}
+
+/*=====  End of left-header-div  ======*/
+
+
+/*=============================================
+=            right-header-div            =
+=============================================*/
+
+.right-header-div{
+    position: relative; /* Needed for positioning the theme dropdown */
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Generic styles for all buttons in the right header */
+.right-header-div button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 20px; /* Smoother curves for buttons */
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.right-header-div button img {
+    width: 16px;
+    height: 16px;
+    filter: var(--icon-filter);
+}
+
+.settings-btn {
+    background-color: transparent;
+    padding: var(--spacing-sm); 
+    border: none;
+    position: relative; /* Required for tooltip positioning */
+}
+
+/* Make this selector more specific to override the general icon size without !important */
+.right-header-div .settings-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.settings-btn:hover {
+    background-color: var(--bg-tertiary); /* Consistent hover with other icon buttons */
+}
+
+.theme-btns {
+    /* Dropdown styles */
+    position: absolute;
+    top: calc(100% + var(--spacing-sm)); /* Position below the header buttons */
+    right: 155px; /* Align to the right edge of the parent */
+    z-index: 10;
+
+
+    /* Visibility (controlled by JS) */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-normal);
+
+    /* Appearance */
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-tertiary);
+    border-radius: 20px; /* Match button curve */
+    padding: var(--spacing-xs);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}
+
+/* This class will be toggled with JavaScript to show the dropdown */
+.show-themes .theme-btns {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.theme-btns button {
+    border: none;
+    position: relative; /* Required for tooltip positioning */
+    background-color: transparent;
+}
+
+.theme-btns button:hover {
+    background-color: var(--bg-secondary);
+    box-shadow: var(--shadow-md);
+}
+
+/* Hide the text by default */
+.theme-btns button span {
+    display: none;
+}
+
+/* Generic tooltip style for any element with a data-tooltip attribute */
+[data-tooltip]::after {
+    content: attr(data-tooltip); /* Use data-tooltip for the text */
+    position: absolute;
+    top: calc(100% + 5px); /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 20;
+
+    /* Hidden by default with a transition */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+.sign-in-btn {
+    background-color: var(--brand-primary);
+    color: white;
+    border: none;
+}
+
+.right-header-div .sign-in-btn img {
+    filter: invert(1); /* This icon is always on a dark background, so it should always be white */
+}
+
+.sign-in-btn:hover {
+    background-color: var(--brand-primary-hover);
+}
+
+.sign-up-btn {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.sign-up-btn:hover {
+    background-color: var(--bg-tertiary);
+}
+
+/*=====  End of right-header-div  ======*/

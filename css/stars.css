@@ -1,0 +1,20 @@
+/*=============================================
+=            Starry Night Effect            =
+=============================================*/
+
+#stars-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Position behind all content */
+    opacity: 0;
+    pointer-events: none; /* Ensure it's not interactive */
+    transition: opacity 1.5s ease-in-out; /* A slow, graceful fade */
+}
+
+/* The 'active' class is added by JS after inactivity in dark mode */
+body.dark-theme #stars-canvas.active {
+    opacity: 1;
+}

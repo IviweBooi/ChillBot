@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChillBot</title>
+    <link rel="stylesheet" href="css/guestNavbar.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/mainContent.css">
+    <link rel="stylesheet" href="css/stars.css">
+</head>
+<body>
+    <canvas id="stars-canvas"></canvas>
+    <header>
+        <div class="left-header-div">
+            <h2><span>Chill</span>Bot</h2>
+        </div>
+        <div class="right-header-div">
+            <button class="settings-btn" data-tooltip="Settings">
+                <img src="assets/icons/settings.svg" alt="settings">
+            </button>
+
+            <div class="theme-btns">
+                <button class="light-mode-btn" data-tooltip="Light">
+                    <img src="assets/icons/sun.svg" alt="light Mode">
+                    <span>Light</span>  
+                </button>
+                <button class="dark-mode-btn" data-tooltip="Dark">
+                    <img src="assets/icons/moon.svg" alt="dark Mode">
+                    <span>Dark</span>
+                </button>
+                <button class="system-mode-btn" data-tooltip="System">
+                    <img src="assets/icons/system.svg" alt="system Mode">
+                    <span>System</span>
+                </button>
+            </div>
+
+            <button class="sign-in-btn">
+                <img src="assets/icons/user.svg" alt="sign-in">
+                <span>Sign In</span>
+            </button>
+            
+            <button class="sign-up-btn">
+                <img src="assets/icons/user.svg" alt="sign-up">
+                <span>Sign Up</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="chat-div">
+            <div class="chat-header">
+                <h1><span>Chill</span>Bot</h1>
+                <p>Your friendly AI companion for stress relief and motivation.</p>
+            </div>
+            <div class="chat-body">
+                <div class="chat-messages">
+                    <!-- Chat bubbles will be dynamically inserted here -->
+                </div>
+                <div class="suggested-prompts">
+                    <button>How can I reduce stress?</button>
+                    <button>Give me a motivational quote</button>
+                    <button>Suggest a 5-minute meditation</button>
+                </div>
+                <div class="chat-input">
+                    <button class="emoji-btn" data-tooltip="Emoji">
+                        <img src="assets/icons/smile.svg" alt="Emoji">
+                    </button>
+                    <input type="text" placeholder="Type your message here...">
+                    <button class="mic-btn" data-tooltip="Use Microphone">
+                        <img src="assets/icons/mic.svg" alt="Use Microphone">
+                    </button>
+                    <button class="send-btn hidden" data-tooltip="Send">
+                        <img src="assets/icons/arrow-up.svg" alt="Send Message">
+                    </button>
+                </div>
+                <p>By messaging ChillBot, you agree to our <span>Terms</span> and <span>Privacy Policy</span>.</p>
+            </div>
+        </div>
+    </main>
+
+    <emoji-picker class="hidden"></emoji-picker>
+
+    <script src="js/main.js" defer></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+</body>
+</html>
