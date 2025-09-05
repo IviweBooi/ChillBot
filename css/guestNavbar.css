@@ -182,15 +182,14 @@ header{
     opacity: 1;
 }
 
+.show-tooltip::after {
+    opacity: 1;
+}
+
 /* Mobile tooltip styles */
 @media (max-width: 768px) {
-    [data-tooltip]::after {
-        opacity: 0;
-        transition: opacity 0.3s ease-out;
-    }
-    [data-tooltip].show-tooltip::after {
-        opacity: 1;
-        transition: opacity 0.3s ease-in;
+    [data-tooltip]:hover::after {
+        display: none; /* Disable hover on mobile */
     }
 }
 
