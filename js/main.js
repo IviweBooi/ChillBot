@@ -41,6 +41,38 @@ function parseMarkdown(text) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Mobile tooltip functionality
+    const handleMobileTooltip = (event) => {
+        if (window.innerWidth > 768) return; // Only for mobile
+        
+        const element = event.currentTarget;
+        element.classList.add('show-tooltip');
+        
+        // Remove any existing timeout to prevent multiple timeouts
+        if (element.tooltipTimeout) {
+            clearTimeout(element.tooltipTimeout);
+        }
+        
+        // Hide tooltip after 3 seconds
+        element.tooltipTimeout = setTimeout(() => {
+            element.classList.remove('show-tooltip');
+        }, 3000);
+    };
+    
+    // Add touch event listeners to all elements with data-tooltip on mobile
+    const addMobileTooltipListeners = () => {
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('[data-tooltip]').forEach(element => {
+                element.addEventListener('touchstart', handleMobileTooltip);
+            });
+        }
+    };
+    
+    // Initialize mobile tooltips
+    addMobileTooltipListeners();
+    
+    // Re-initialize on window resize
+    window.addEventListener('resize', addMobileTooltipListeners);
 
     let startAnimation = () => {};
     let stopAnimation = () => {};

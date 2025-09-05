@@ -154,10 +154,15 @@ header{
 }
 
 /* Generic tooltip style for any element with a data-tooltip attribute */
+/* Hide tooltips on mobile devices */
+[data-tooltip] {
+    position: relative;
+}
+
 [data-tooltip]::after {
-    content: attr(data-tooltip); /* Use data-tooltip for the text */
+    content: attr(data-tooltip);
     position: absolute;
-    top: calc(100% + 5px); /* Position above the button */
+    top: calc(100% + 5px);
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
@@ -168,8 +173,6 @@ header{
     font-weight: 500;
     white-space: nowrap;
     z-index: 20;
-
-    /* Hidden by default with a transition */
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition-fast);
@@ -177,6 +180,18 @@ header{
 
 [data-tooltip]:hover::after {
     opacity: 1;
+}
+
+/* Mobile tooltip styles */
+@media (max-width: 768px) {
+    [data-tooltip]::after {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+    }
+    [data-tooltip].show-tooltip::after {
+        opacity: 1;
+        transition: opacity 0.3s ease-in;
+    }
 }
 
 .sign-in-btn {
