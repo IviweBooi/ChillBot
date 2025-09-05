@@ -8,8 +8,11 @@ main {
     justify-content: center;
     align-items: center; /* Vertically center content when it's short */
     padding: var(--spacing-lg);
-    overflow-y: auto; /* Allow scrolling if content overflows */
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
     margin-top: var(--header-height); /* Offset for the fixed header */
+    width: 100%;
+    max-width: 100vw; /* Ensure it doesn't exceed viewport width */
 }
 
 main.is-chatting {
@@ -157,7 +160,11 @@ main.is-chatting {
     flex-direction: column;
     gap: var(--spacing-md);
     width: 100%;
-    margin-bottom: var(--spacing-md); /* Add some space above suggested prompts */
+    max-width: 100%;
+    margin-bottom: var(--spacing-md);
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    padding: 0 var(--spacing-sm); /* Add some padding to prevent content from touching edges */
+    box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .message {
