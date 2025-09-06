@@ -127,6 +127,11 @@ main.is-chatting {
     background-color: var(--bg-tertiary);
 }
 
+.mic-btn.is-listening {
+    background-color: var(--feedback-dislike-bg); /* Use red-ish color as a base listening indicator */
+    transition: transform 50ms ease-out, box-shadow 50ms ease-out;
+}
+
 .emoji-btn {
     background-color: transparent;
 }
