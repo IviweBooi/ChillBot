@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const applyTheme = (theme) => {
         if (theme === 'dark') {
+            document.documentElement.classList.remove('dark-theme-preload');
             document.body.classList.add('dark-theme');
             if (canvas) {
                 canvas.classList.add('active');
@@ -117,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             document.body.classList.remove('dark-theme');
+            document.documentElement.classList.remove('dark-theme-preload');
             if (canvas) {
                 canvas.classList.remove('active');
                 stopAnimation();
