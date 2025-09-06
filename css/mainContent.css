@@ -241,6 +241,14 @@ main.is-chatting {
     background-color: var(--bot-message-border); /* Use the border color for a subtle hover */
 }
 
+.message-actions button[data-tooltip="Like"].active {
+    background-color: var(--feedback-like-bg);
+}
+
+.message-actions button[data-tooltip="Dislike"].active {
+    background-color: var(--feedback-dislike-bg);
+}
+
 .message-actions button img {
     width: 16px;
     height: 16px;

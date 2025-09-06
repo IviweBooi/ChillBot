@@ -19,6 +19,8 @@
     --user-message-border: rgba(0, 0, 0, 0.05);
     --bot-message-bg: rgba(255, 255, 255, 0.7);
     --bot-message-border: rgba(0, 0, 0, 0.1);
+    --feedback-like-bg: rgba(22, 163, 74, 0.15); /* Green for like */
+    --feedback-dislike-bg: rgba(220, 38, 38, 0.15); /* Red for dislike */
     --icon-filter: none; /* No filter for dark icons on light bg */
     
     /* Typography */
@@ -69,6 +71,8 @@ html.dark-theme-preload, body.dark-theme {
     --user-message-border: rgba(255, 255, 255, 0.1);
     --bot-message-bg: rgba(31, 41, 55, 0.5); /* #1f2937 with alpha */
     --bot-message-border: rgba(255, 255, 255, 0.15);
+    --feedback-like-bg: rgba(34, 197, 94, 0.25); /* Green for like */
+    --feedback-dislike-bg: rgba(239, 68, 68, 0.25); /* Red for dislike */
     --icon-filter: invert(1);
 }
 
