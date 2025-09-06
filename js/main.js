@@ -2,6 +2,8 @@
  * Main JavaScript file for ChillBot UI interactions.
  */
 
+const DAILY_API_LIMIT = 25; // Set the daily message limit per user
+
 /**
  * A simple markdown-to-HTML parser.
  * Handles paragraphs, bold text, and numbered lists.
@@ -38,6 +40,32 @@ function parseMarkdown(text) {
 
     // Process inline elements like bold
     return html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+}
+
+/**
+ * Gets the current API call count from localStorage for the current day.
+ * Resets the count if it's a new day.
+ * @returns {{count: number, date: string}}
+ */
+function getApiCallCount() {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    const usageData = localStorage.getItem('apiUsage');
+    let usage = usageData ? JSON.parse(usageData) : { count: 0, date: '' };
+
+    if (usage.date !== today) {
+        usage = { count: 0, date: today };
+        localStorage.setItem('apiUsage', JSON.stringify(usage));
+    }
+    return usage;
+}
+
+/**
+ * Increments the API call count in localStorage.
+ */
+function incrementApiCallCount() {
+    let usage = getApiCallCount(); // Ensures date is current before incrementing
+    usage.count++;
+    localStorage.setItem('apiUsage', JSON.stringify(usage));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -293,6 +321,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // Don't send empty messages
         }
 
+        // Check API call limit before sending
+        const usage = getApiCallCount();
+        if (usage.count >= DAILY_API_LIMIT) {
+            const limitMessageElement = document.createElement('div');
+            limitMessageElement.classList.add('message', 'bot-message');
+            limitMessageElement.textContent = `You have reached your daily message limit of ${DAILY_API_LIMIT}. Please come back tomorrow!`;
+            chatMessagesContainer.appendChild(limitMessageElement);
+            limitMessageElement.scrollIntoView({ behavior: 'smooth' });
+            // Clear the input field after showing the limit message
+            chatInput.value = '';
+            return;
+        }
+
         // On first message, hide header and show "New Chat" button
         if (chatHeader && !chatHeader.classList.contains('hidden')) {
             chatHeader.classList.add('hidden');
@@ -306,6 +347,9 @@ document.addEventListener('DOMContentLoaded', () => {
         userMessageElement.classList.add('message', 'user-message');
         userMessageElement.textContent = messageText;
         chatMessagesContainer.appendChild(userMessageElement);
+
+        // Increment the count now that a valid message has been sent
+        incrementApiCallCount();
 
         // 2. Clear the input field
         chatInput.value = '';
@@ -365,6 +409,75 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.src = `assets/icons/${action.icon}.svg`;
                 img.alt = action.tooltip;
                 button.appendChild(img);
+
+                if (action.icon === 'copy') {
+                    button.addEventListener('click', () => {
+                        const originalTooltip = button.dataset.tooltip;
+                        // Use the raw text from the bot to preserve original formatting
+                        navigator.clipboard.writeText(botResponseText).then(() => {
+                            button.dataset.tooltip = 'Copied!';
+                            setTimeout(() => {
+                                button.dataset.tooltip = originalTooltip;
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                        });
+                    });
+                }
+
+                if (action.icon === 'regenerate') {
+                    button.addEventListener('click', () => {
+                        botMessageElement.remove();
+                        showBotResponse(userMessage);
+                    });
+                }
+
+                if (action.icon === 'like' || action.icon === 'dislike') {
+                    button.addEventListener('click', () => {
+                        const isAlreadyActive = button.classList.contains('active');
+
+                        // Find sibling like/dislike buttons within the same actions container
+                        const likeButton = button.parentElement.querySelector('[data-tooltip="Like"]');
+                        const dislikeButton = button.parentElement.querySelector('[data-tooltip="Dislike"]');
+
+                        // Deactivate both to ensure only one can be active
+                        if (likeButton) likeButton.classList.remove('active');
+                        if (dislikeButton) dislikeButton.classList.remove('active');
+
+                        // If the button was not already active, activate it.
+                        if (!isAlreadyActive) {
+                            button.classList.add('active');
+                        }
+                    });
+                }
+
+                if (action.icon === 'share') {
+                    button.addEventListener('click', async () => {
+                        const shareData = {
+                            title: 'ChillBot Response',
+                            text: botResponseText,
+                            url: window.location.href
+                        };
+
+                        if (navigator.share) {
+                            try {
+                                await navigator.share(shareData);
+                            } catch (err) {
+                                console.error('Share API failed:', err);
+                            }
+                        } else {
+                            // Fallback for browsers that don't support Web Share API
+                            const originalTooltip = button.dataset.tooltip;
+                            navigator.clipboard.writeText(botResponseText).then(() => {
+                                button.dataset.tooltip = 'Copied!';
+                                setTimeout(() => {
+                                    button.dataset.tooltip = originalTooltip;
+                                }, 2000);
+                            }).catch(err => console.error('Fallback copy failed:', err));
+                        }
+                    });
+                }
+
                 actionsContainer.appendChild(button);
             });
 
