@@ -247,6 +247,105 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Speech Recognition (Microphone) Functionality ---
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+
+    // Web Audio API for visualization
+    let audioContext;
+    let analyser;
+    let microphoneStream;
+    let animationFrameId;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        const visualize = () => {
+            if (!analyser) return;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray);
+
+            let sum = 0;
+            for (let i = 0; i < bufferLength; i++) {
+                sum += dataArray[i];
+            }
+            const average = sum / bufferLength;
+
+            // Scale the animation based on the average volume.
+            const scale = 1 + (average / 256) * 0.1; // Scale up to 1.1
+            const shadowOpacity = Math.min(average / 100, 0.7);
+            
+            micBtn.style.transform = `scale(${scale})`;
+            micBtn.style.boxShadow = `0 0 10px rgba(220, 38, 38, ${shadowOpacity})`;
+
+            animationFrameId = requestAnimationFrame(visualize);
+        };
+
+        micBtn.addEventListener('click', () => {
+            if (micBtn.classList.contains('is-listening')) {
+                recognition.stop();
+                return;
+            }
+            
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    microphoneStream = stream;
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    const source = audioContext.createMediaStreamSource(stream);
+                    source.connect(analyser);
+                    analyser.fftSize = 512;
+                    recognition.start();
+                })
+                .catch(err => {
+                    console.error("Error accessing microphone for visualization:", err);
+                    recognition.start(); // Fallback to start without visualization
+                });
+        });
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            chatInput.value = transcript;
+            // Manually trigger the input event to show the send button
+            chatInput.dispatchEvent(new Event('input'));
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+        };
+
+        recognition.onstart = () => {
+            micBtn.classList.add('is-listening');
+            visualize();
+        };
+
+        recognition.onend = () => {
+            micBtn.classList.remove('is-listening');
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+            if (microphoneStream) {
+                microphoneStream.getTracks().forEach(track => track.stop());
+                microphoneStream = null;
+            }
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            // Reset inline styles
+            micBtn.style.transform = '';
+            micBtn.style.boxShadow = '';
+        };
+    } else {
+        // Hide the mic button if the browser doesn't support the API
+        if (micBtn) micBtn.classList.add('hidden');
+    }
+
     // --- Suggested Prompts Functionality ---
     const suggestedPromptButtons = document.querySelectorAll('.suggested-prompts button');
 
